@@ -4,8 +4,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomePageScreen from './app/screens/HomePageScreen';
 import AboutScreen from './app/screens/AboutScreen';
 import RegisterScreen from './app/screens/RegisterScreen';
-// import SettingsScreen from './screens/SettingsScreen';
-// import Header from './app/components/Header';
+import LoginScreen from "@/app/screens/LoginScreen";
+import TermsScreen from "@/app/screens/TermsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -35,6 +35,16 @@ export default function App() {
                     name="Register"
                     component={RegisterScreen}
                     options={{ title: 'Register' }}
+                />
+                <Drawer.Screen
+                    name="Login"
+                    component={LoginScreen}
+                    options={{ title: 'Login' }}
+                />
+                <Drawer.Screen
+                    name="Terms"
+                    component={TermsScreen}
+                    options={{ title: 'Terms' }}
                 />
             </Drawer.Navigator>
         </NavigationContainer>

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, ScrollView, Image, Dimensions, Alert, Button} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Image, Dimensions, Alert, Button, TouchableOpacity} from 'react-native';
 import {useNavigation} from "@react-navigation/native";
 import {LinearGradient} from 'expo-linear-gradient';
 import type {DrawerNavigationProp} from '@react-navigation/drawer';
@@ -65,8 +65,9 @@ export default function RegisterScreen() {
                             onChangeText={setConfirmPassword}
                         />
 
-                        <Button title="Save" color="#4B0082" onPress={handleSave}/>
-
+                        <TouchableOpacity style={styles.registerButton} onPress={handleSave}>
+                            <Text style={styles.registerButtonText}>Register</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </ScrollView>
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
     subtitle: {
         fontSize: 16,
         fontWeight: '600',
-        color: '#6B21A8',
+        color: '#2865ec',
         textAlign: 'center',
         marginBottom: 24,
     },
@@ -148,17 +149,23 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 20,
     },
-    startedButton: {
-        backgroundColor: '#2350ea',
-        paddingVertical: 12,
-        paddingHorizontal: 24,
-        borderRadius: 10,
+    registerButton: {
+        backgroundColor: '#1f58ea',
+        paddingVertical: 14,
+        paddingHorizontal: 28,
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
         marginTop: 20,
+        shadowColor: '#1f58ea',
+        shadowOpacity: 0.15,
+        shadowOffset: { width: 0, height: 4 },
+        shadowRadius: 8,
+        elevation: 4,
     },
-    buttonText: {
+    registerButtonText: {
         color: '#fff',
         fontSize: 16,
-        fontWeight: '600',
-        textAlign: 'center',
+        fontWeight: '700',
     },
 });

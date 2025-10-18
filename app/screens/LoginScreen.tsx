@@ -1,14 +1,22 @@
-import React, {use} from 'react';
-import {View, Text, StyleSheet, ScrollView, Image, Dimensions, TouchableOpacity} from 'react-native';
-import { useNavigation} from "@react-navigation/native";
-import { LinearGradient } from 'expo-linear-gradient';
-import type { DrawerNavigationProp } from '@react-navigation/drawer';
-import type { RootDrawerParamList } from '../types/navigation';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, ScrollView, Image, Dimensions, Alert, TouchableOpacity} from 'react-native';
+import {useNavigation} from "@react-navigation/native";
+import {LinearGradient} from 'expo-linear-gradient';
+import type {DrawerNavigationProp} from '@react-navigation/drawer';
+import type {RootDrawerParamList} from '../types/navigation';
+import Input from '../components/Input';
+
 type MyNavProp = DrawerNavigationProp<RootDrawerParamList, 'HomePage'>;
 
-const { width } = Dimensions.get('window');
-export default function HomePageScreen() {
+const {width} = Dimensions.get('window');
+export default function LoginScreen() {
     const navigation = useNavigation<MyNavProp>();
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    const handleSave = () => {
+        Alert.alert('Saved', `Your name is now: ${email}`);
+    };
 
     return (
         <LinearGradient
@@ -25,24 +33,26 @@ export default function HomePageScreen() {
                         />
 
                         <Text style={styles.title}>Merlin for All</Text>
-                        <Text style={styles.subtitle}>Your Personal Finance Companion</Text>
+                        <Text style={styles.subtitle}>Login to Merlin for All</Text>
 
-                        <Text style={styles.paragraph}>
-                            Take control of your money with <Text style={styles.bold}>Merlin for All</Text>. Track your income
-                            and expenses, see where your money goes, and plan your savings effortlessly.
-                        </Text>
+                        <Input
+                            label="Email"
+                            placeholder="Enter your name"
+                            value={email}
+                            onChangeText={setEmail}
+                        />
 
-                        <Text style={styles.paragraphAlt}>
-                            Log what you earn, record what you spend, and visualize your progress toward your financial goals.
-                            Whether you&#39;re budgeting, saving, or just keeping an eye on your spending, Merlin for All keeps it
-                            all in one place.
-                        </Text>
-                        <TouchableOpacity style={styles.startedButton} onPress={() => navigation.navigate('Register')}>
-                            <Text style={styles.buttonText}>Get Started</Text>
+                        <Input
+                            label="Password"
+                            placeholder="********"
+                            value={password}
+                            onChangeText={setPassword}
+                        />
+
+                        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                            <Text style={styles.saveButtonText}>Login</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('About')}>
-                            <Text style={styles.buttonText}>Learn More</Text>
-                        </TouchableOpacity>
+
                     </View>
                 </View>
             </ScrollView>
@@ -76,7 +86,7 @@ const styles = StyleSheet.create({
         shadowColor: '#4B0082',
         shadowOpacity: 0.12,
         shadowRadius: 20,
-        shadowOffset: { width: 0, height: 10 },
+        shadowOffset: {width: 0, height: 10},
         elevation: 8,
         alignItems: 'center',
     },
@@ -124,17 +134,24 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 20,
     },
-    startedButton: {
-        backgroundColor: '#2350ea',
-        paddingVertical: 12,
-        paddingHorizontal: 24,
-        borderRadius: 10,
+    saveButton: {
+        backgroundColor: '#1f58ea',
+        paddingVertical: 14,
+        paddingHorizontal: 28,
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
         marginTop: 20,
+        shadowColor: '#1f58ea',
+        shadowOpacity: 0.15,
+        shadowOffset: { width: 0, height: 4 },
+        shadowRadius: 8,
+        elevation: 4,
     },
-    buttonText: {
+    saveButtonText: {
         color: '#fff',
         fontSize: 16,
-        fontWeight: '600',
-        textAlign: 'center',
+        fontWeight: '700',
     },
+
 });
