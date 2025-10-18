@@ -37,27 +37,30 @@ export default function LoginScreen() {
         }
 
         setLoading(true);
-
         try {
-            const response = await api.post('/mobile/login', { email, password });
+            const { data } = await api.post<{
+                user: { id: number; name: string; email: string };
+                token: string;
+            }>('/mobile/login', { email, password });
 
-            console.log('✅ Login response:', response.data);
+            // pull the fields out correctly
+            const { user, token } = data;
 
-            const { token, user } = response.data;
-
-            // Save token locally
+            // save token for later use
             await AsyncStorage.setItem('authToken', token);
 
+            // optionally set default header for all next requests in this session
+            api.defaults.headers.common.Authorization = `Bearer ${token}`;
+
+            console.log('✅ Login response:', data);
             Alert.alert('Welcome', `Logged in as ${user.name}`);
 
-            // Navigate to Home
             navigation.navigate('HomePage');
-
-        } catch (error: any) {
-            console.error(error);
+        } catch (err: any) {
+            console.log('❌ Login error:', err.response?.status, err.response?.data || err.message);
             Alert.alert(
                 'Login Failed',
-                error.response?.data?.message || 'Invalid credentials or server not reachable.'
+                err.response?.data?.message ?? 'Invalid credentials or server not reachable.'
             );
         } finally {
             setLoading(false);
