@@ -9,23 +9,18 @@ import {
     Alert,
     TouchableOpacity,
     KeyboardAvoidingView,
-    Platform
+    Platform,
 } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from 'expo-linear-gradient';
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { DrawerNavigationProp } from '@react-navigation/drawer';
-import type { RootDrawerParamList } from '../types/navigation';
-import Input from '../components/Input';
-import api from '../lib/axios';
-
-type MyNavProp = DrawerNavigationProp<RootDrawerParamList, 'HomePage'>;
+import Input from '../../components/Input';
+import api from '../../lib/axios';
+import { useAuth } from '../../context/AuthContext'; // ✅ import the Auth context
 
 const { width } = Dimensions.get('window');
 
 export default function LoginScreen() {
-    const navigation = useNavigation<MyNavProp>();
+    const { setIsLoggedIn } = useAuth(); // ✅ use the context setter
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -43,19 +38,17 @@ export default function LoginScreen() {
                 token: string;
             }>('/mobile/login', { email, password });
 
-            // pull the fields out correctly
             const { user, token } = data;
 
-            // save token for later use
+            // Save token for later use
             await AsyncStorage.setItem('authToken', token);
-
-            // optionally set default header for all next requests in this session
             api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
             console.log('✅ Login response:', data);
             Alert.alert('Welcome', `Logged in as ${user.name}`);
 
-            navigation.navigate('HomePage');
+            // ✅ Flip the auth state instead of navigating manually
+            setIsLoggedIn(true);
         } catch (err: any) {
             console.log('❌ Login error:', err.response?.status, err.response?.data || err.message);
             Alert.alert(
@@ -77,7 +70,7 @@ export default function LoginScreen() {
                     <View style={styles.container}>
                         <View style={styles.card}>
                             <Image
-                                source={require('../../assets/MerlinForAllLogo.jpg')}
+                                source={require('../../../assets/MerlinForAllLogo.jpg')}
                                 style={styles.logo}
                                 resizeMode="contain"
                             />
@@ -138,9 +131,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#E0E0E0',
         shadowColor: '#4B0082',
-        shadowOpacity: 0.12,
-        shadowRadius: 20,
-        shadowOffset: { width: 0, height: 10 },
+        boxShadow: '0px 10px 20px rgba(75, 0, 130, 0.12)',
         elevation: 8,
         alignItems: 'center',
     },
@@ -172,10 +163,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 20,
-        shadowColor: '#1f58ea',
-        shadowOpacity: 0.15,
-        shadowOffset: { width: 0, height: 4 },
-        shadowRadius: 8,
+        boxShadow: '0px 10px 20px rgba(75, 0, 130, 0.12)',
         elevation: 4,
     },
     saveButtonText: {

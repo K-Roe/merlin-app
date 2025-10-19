@@ -3,8 +3,8 @@ import {View, Text, StyleSheet, ScrollView, Image, Dimensions, Alert, Button, To
 import {useNavigation} from "@react-navigation/native";
 import {LinearGradient} from 'expo-linear-gradient';
 import type {DrawerNavigationProp} from '@react-navigation/drawer';
-import type {RootDrawerParamList} from '../types/navigation';
-import Input from '../components/Input';
+import type {RootDrawerParamList} from '@/types/navigation';
+import Input from '../../components/Input';
 
 type MyNavProp = DrawerNavigationProp<RootDrawerParamList, 'HomePage'>;
 
@@ -29,7 +29,7 @@ export default function RegisterScreen() {
                 <View style={styles.container}>
                     <View style={styles.card}>
                         <Image
-                            source={require('../../assets/MerlinForAllLogo.jpg')}
+                            source={require('../../../assets/MerlinForAllLogo.jpg')}
                             style={styles.logo}
                             resizeMode="contain"
                         />
@@ -98,10 +98,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 28,
         borderWidth: 1,
         borderColor: '#E0E0E0',
-        shadowColor: '#4B0082',
-        shadowOpacity: 0.12,
-        shadowRadius: 20,
-        shadowOffset: {width: 0, height: 10},
+        boxShadow: '0px 10px 20px rgba(75, 0, 130, 0.12)',
         elevation: 8,
         alignItems: 'center',
     },
@@ -157,10 +154,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 20,
-        shadowColor: '#1f58ea',
-        shadowOpacity: 0.15,
-        shadowOffset: { width: 0, height: 4 },
-        shadowRadius: 8,
+        boxShadow: '0px 10px 20px rgba(75, 0, 130, 0.12)',
         elevation: 4,
     },
     registerButtonText: {

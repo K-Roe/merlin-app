@@ -11,7 +11,7 @@ export default function TermsScreen() {
                 <View style={styles.container}>
                     <View style={styles.card}>
                         <Image
-                            source={require('../../assets/MerlinForAllLogo.jpg')}
+                            source={require('../../../assets/MerlinForAllLogo.jpg')}
                             style={styles.logo}
                             resizeMode="contain"
                         />
@@ -101,10 +101,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 28,
         borderWidth: 1,
         borderColor: '#E0E0E0',
-        shadowColor: '#4B0082',
-        shadowOpacity: 0.12,
-        shadowRadius: 20,
-        shadowOffset: { width: 0, height: 10 },
+        boxShadow: '0px 10px 20px rgba(75, 0, 130, 0.12)',
         elevation: 8,
         alignItems: 'center',
     },

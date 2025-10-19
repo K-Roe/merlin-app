@@ -46,10 +46,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         fontSize: 16,
         color: '#111827',
-        shadowColor: '#4B0082',
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
-        shadowOffset: { width: 0, height: 3 },
+        boxShadow: '0px 10px 20px rgba(75, 0, 130, 0.12)',
         elevation: 3,
     },
     inputFocused: {
