@@ -88,6 +88,17 @@ export default function AssessmentScreen() {
         }
     };
 
+    const handleDeleteEntry = async (entry: Entry) => {
+        try {
+            await api.delete(`/mobile/assessment/entries/${entry.financial_assessment_id}`);
+            setEntries(prev => prev.filter(e => e.financial_assessment_id !== entry.financial_assessment_id));
+            Alert.alert('Deleted', `${entry.name} removed successfully.`);
+        } catch (err: any) {
+            console.error('❌ Error deleting entry:', err.response?.data || err.message);
+            Alert.alert('Error', 'Failed to delete entry.');
+        }
+    };
+
     return (
         <LinearGradient colors={['#f8f5ff', '#ffffff']} style={styles.background}>
             <KeyboardAvoidingView
@@ -160,7 +171,7 @@ export default function AssessmentScreen() {
                             {/* 👇 Now placed inside the ScrollView, after the buttons */}
                             <TransactionList
                                 entries={entries}
-                                onDelete={(entry) => console.log('Delete entry:', entry)}
+                                onDelete={handleDeleteEntry}
                             />
                         </View>
                     </View>
