@@ -15,6 +15,7 @@ import api from '@/app/lib/axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../../context/AuthContext';
 import AssessmentList from '../../components/Dashboard/AssessmentList';
+import DashboardButtons from '../../components/Dashboard/DashboardButtons';
 
 
 const { width } = Dimensions.get('window');
@@ -22,6 +23,7 @@ const { width } = Dimensions.get('window');
 export default function DashboardScreen() {
     const { logout } = useAuth(); // ✅ use logout from context
     const [loading, setLoading] = useState(false);
+    const [refreshKey, setRefreshKey] = useState(0);
 
     const handleLogOut = async () => {
         setLoading(true);
@@ -74,8 +76,9 @@ export default function DashboardScreen() {
                             track assessments, and get insights.
                         </Text>
 
-                        <AssessmentList />
+                        <DashboardButtons onCreated={() => setRefreshKey(prev => prev + 1)} />
 
+                        <AssessmentList refreshKey={refreshKey} />
 
                         <TouchableOpacity
                             style={[styles.saveButton, loading && { opacity: 0.7 }]}

@@ -34,11 +34,20 @@ export default function AssessmentScreen() {
     const [date, setDate] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
     const [entries, setEntries] = useState<Entry[]>([]);
+    const [assessmentMonth, setAssessmentMonth] = useState<{ year: number; month: number } | null>(null);
 
     const loadEntries = useCallback(async () => {
         try {
             const res = await api.get(`/mobile/assessment/${id}/entries`);
             setEntries(res.data);
+            if (res.data.length > 0) {
+                const baseDate = new Date(res.data[0].date);
+                setAssessmentMonth({
+                    year: baseDate.getFullYear(),
+                    month: baseDate.getMonth(), // 0-based (0 = Jan)
+                });
+            }
+
         } catch (err) {
             console.error('Error loading entries:', err);
         }
@@ -49,12 +58,27 @@ export default function AssessmentScreen() {
             try {
                 const res = await api.get(`/mobile/assessment/${id}/entries`);
                 setEntries(res.data);
+                if (res.data.length > 0) {
+                    const baseDate = new Date(res.data[0].date);
+                    setAssessmentMonth({
+                        year: baseDate.getFullYear(),
+                        month: baseDate.getMonth(), // 0-based (0 = Jan)
+                    });
+                }
             } catch (err) {
                 console.error('Error loading entries:', err);
             }
         })();
     }, [id]);
 
+    const getMonthRange = () => {
+        if (!assessmentMonth) return {};
+
+        const { year, month } = assessmentMonth;
+        const minDate = new Date(year, month, 1);
+        const maxDate = new Date(year, month + 1, 0); // last day of that month
+        return { minDate, maxDate };
+    };
     const handleSubmit = async (type: '+' | '-') => {
         if (!description || !amount || !category) {
             Alert.alert('Missing Fields', 'Please fill in all fields before submitting.');
@@ -143,6 +167,8 @@ export default function AssessmentScreen() {
                                     value={date}
                                     mode="date"
                                     display="default"
+                                    minimumDate={getMonthRange().minDate}
+                                    maximumDate={getMonthRange().maxDate}
                                     onChange={(event, selectedDate) => {
                                         setShowPicker(false);
                                         if (selectedDate) setDate(selectedDate);

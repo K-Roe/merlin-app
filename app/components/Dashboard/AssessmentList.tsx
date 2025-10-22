@@ -8,7 +8,11 @@ interface Assessment {
     name: string;
 }
 
-export default function AssessmentList() {
+interface AssessmentListProps {
+    refreshKey?: number;
+}
+
+export default function AssessmentList({ refreshKey }: AssessmentListProps) {
     const [assessments, setAssessments] = useState<Assessment[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -25,8 +29,9 @@ export default function AssessmentList() {
     };
 
     useEffect(() => {
+        setLoading(true);
         loadAssessments();
-    }, []);
+    }, [refreshKey]);
 
     if (loading) {
         return (

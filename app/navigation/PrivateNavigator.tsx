@@ -1,6 +1,7 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import Dashboard from '../screens/LoggedIn/DashboardScreen';
+import Profile from '../screens/LoggedIn/ProfileScreen';
 import AssessmentScreen from '../screens/LoggedIn/AssessmentScreen';
 import { Ionicons } from '@expo/vector-icons';
 import { PrivateDrawerParamList } from '@/types/navigation';
@@ -31,6 +32,17 @@ function DrawerNavigator() {
                 component={Dashboard}
                 options={{
                     title: 'Dashboard',
+                    drawerIcon: ({ color, size }) => (
+                        <Ionicons name="speedometer-outline" color={color} size={size} />
+                    ),
+                }}
+            />
+
+            <Drawer.Screen
+                name="Profile"
+                component={Profile}
+                options={{
+                    title: 'Profile',
                     drawerIcon: ({ color, size }) => (
                         <Ionicons name="speedometer-outline" color={color} size={size} />
                     ),
