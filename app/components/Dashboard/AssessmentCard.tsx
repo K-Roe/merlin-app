@@ -2,21 +2,25 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Checkbox } from 'expo-checkbox';
 import api from '@/app/lib/axios';
+import { useNavigation } from '@react-navigation/native';
 
 interface Props {
     assessment: {
         id: number;
         name: string;
     };
+    onDeleted?: () => void;
 }
 
-export default function AssessmentCard({ assessment }: Props) {
+export default function AssessmentCard({ assessment, onDeleted }: Props) {
     const [selected, setSelected] = useState(false);
     const [loading, setLoading] = useState(false);
     const [advice, setAdvice] = useState<string | null>(null);
+    const navigation = useNavigation();
 
-    const handleOpen = async () => {
-        Alert.alert('Open', `Opening ${assessment.name}`);
+
+    const handleOpen = async (assessment: { id: number; name: string }) => {
+        navigation.getParent()?.navigate('Assessment', { id: assessment.id, name: assessment.name });
     };
 
     const handleDetails = () => {
@@ -25,10 +29,7 @@ export default function AssessmentCard({ assessment }: Props) {
 
     const handleDelete = async () => {
         Alert.alert('Confirm', `Delete ${assessment.name}?`, [
-            {
-                text: 'Cancel',
-                style: 'cancel',
-            },
+            { text: 'Cancel', style: 'cancel' },
             {
                 text: 'Delete',
                 style: 'destructive',
@@ -36,6 +37,7 @@ export default function AssessmentCard({ assessment }: Props) {
                     try {
                         await api.delete(`/mobile/financialAssessment/${assessment.id}`);
                         Alert.alert('Deleted', `${assessment.name} has been removed.`);
+                        if (onDeleted) onDeleted(); // 👈 trigger parent refresh
                     } catch (err: any) {
                         console.log('❌ Delete error:', err.response?.data || err.message);
                         Alert.alert('Error', 'Failed to delete assessment.');
@@ -74,7 +76,7 @@ export default function AssessmentCard({ assessment }: Props) {
             <View style={styles.actions}>
                 <TouchableOpacity
                     style={[styles.button, styles.openBtn]}
-                    onPress={handleOpen}
+                    onPress={() => handleOpen(assessment)}
                 >
                     <Text style={styles.btnText}>📈 Open</Text>
                 </TouchableOpacity>

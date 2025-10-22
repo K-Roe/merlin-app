@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, ScrollView, Image, Dimensions, Alert, Button, TouchableOpacity} from 'react-native';
 import {useNavigation} from "@react-navigation/native";
 import {LinearGradient} from 'expo-linear-gradient';
-import type {DrawerNavigationProp} from '@react-navigation/drawer';
-import type {RootDrawerParamList} from '@/types/navigation';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { PublicStackParamList } from '@/types/navigation';
 import Input from '../../components/Input';
 
-type MyNavProp = DrawerNavigationProp<RootDrawerParamList, 'HomePage'>;
+type MyNavProp = NativeStackNavigationProp<PublicStackParamList, 'HomePage'>;
 
 const {width} = Dimensions.get('window');
 export default function RegisterScreen() {

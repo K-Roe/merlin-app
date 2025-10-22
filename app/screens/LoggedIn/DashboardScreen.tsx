@@ -8,6 +8,7 @@ import {
     Dimensions,
     TouchableOpacity,
     Alert,
+    Button
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import api from '@/app/lib/axios';
@@ -52,6 +53,10 @@ export default function DashboardScreen() {
         }
     };
 
+    const handleClear = async () => {
+        await AsyncStorage.removeItem('authToken');
+    };
+
     return (
         <LinearGradient colors={['#f8f5ff', '#ffffff']} style={styles.background}>
             <ScrollView contentContainerStyle={styles.scroll}>
@@ -81,6 +86,17 @@ export default function DashboardScreen() {
                                 {loading ? 'Logging out...' : 'Log Out'}
                             </Text>
                         </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={[styles.saveButton, loading && { opacity: 0.7 }]}
+                            onPress={handleClear}
+                            disabled={loading}
+                        >
+                            <Text style={styles.saveButtonText}>
+                                {loading ? 'Clear Auth Token' : 'Cleaering'}
+                            </Text>
+                        </TouchableOpacity>
+
                     </View>
                 </View>
             </ScrollView>

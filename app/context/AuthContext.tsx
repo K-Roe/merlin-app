@@ -1,37 +1,43 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// The shape of our context
 interface AuthContextType {
     isLoggedIn: boolean;
     setIsLoggedIn: (value: boolean) => void;
     logout: () => Promise<void>;
 }
 
-// Create the context with defaults
 const AuthContext = createContext<AuthContextType>({
     isLoggedIn: false,
     setIsLoggedIn: () => {},
     logout: async () => {},
 });
 
-// ✅ Provider component that wraps your whole app
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    // On app start, check for saved token
-    useEffect(() => {
-        (async () => {
-            const token = await AsyncStorage.getItem('authToken');
-            setIsLoggedIn(!!token);
-        })();
-    }, []);
-
-    // Logout clears token + flips state
-    const logout = async () => {
+    const logout = useCallback(async () => {
         await AsyncStorage.removeItem('authToken');
         setIsLoggedIn(false);
-    };
+    }, []);
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            const token = await AsyncStorage.getItem('authToken');
+            if (token) {
+                setIsLoggedIn(true);
+            } else {
+                // 🚪 No token found — auto logout
+                setIsLoggedIn(false);
+            }
+        };
+
+        checkAuth();
+
+        // Optional: you can re-check occasionally or when app comes back to focus
+        const interval = setInterval(checkAuth, 60 * 1000); // every 60 seconds
+        return () => clearInterval(interval);
+    }, [logout]);
 
     return (
         <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, logout }}>
@@ -40,6 +46,5 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 };
 
-// ✅ Helper hook for any component to use it easily
 export const useAuth = () => useContext(AuthContext);
 export default AuthProvider;

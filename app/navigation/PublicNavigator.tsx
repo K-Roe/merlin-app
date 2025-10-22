@@ -12,7 +12,7 @@ const Drawer = createDrawerNavigator<PublicStackParamList>();
 export default function PublicNavigator() {
     return (
         <Drawer.Navigator
-            initialRouteName="Login"
+            initialRouteName="HomePage"
             screenOptions={({ navigation }) => ({
                 headerShown: true,
                 headerLeft: () => (

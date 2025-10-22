@@ -9,4 +9,5 @@ export type PublicStackParamList = {
 
 export type PrivateDrawerParamList = {
     Dashboard: undefined;
+    Assessment: undefined;
 };

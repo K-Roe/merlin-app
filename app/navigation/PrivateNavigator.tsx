@@ -1,11 +1,14 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
 import Dashboard from '../screens/LoggedIn/DashboardScreen';
+import AssessmentScreen from '../screens/LoggedIn/AssessmentScreen';
 import { Ionicons } from '@expo/vector-icons';
 import { PrivateDrawerParamList } from '@/types/navigation';
 
 const Drawer = createDrawerNavigator<PrivateDrawerParamList>();
+const Stack = createStackNavigator();
 
-export default function PrivateNavigator() {
+function DrawerNavigator() {
     return (
         <Drawer.Navigator
             screenOptions={({ navigation }) => ({
@@ -34,5 +37,28 @@ export default function PrivateNavigator() {
                 }}
             />
         </Drawer.Navigator>
+    );
+}
+
+export default function PrivateNavigator() {
+    return (
+        <Stack.Navigator>
+            {/* Main drawer (only Dashboard shows here) */}
+            <Stack.Screen
+                name="MainDrawer"
+                component={DrawerNavigator}
+                options={{ headerShown: false }}
+            />
+
+            {/* Hidden screen — NOT in drawer menu */}
+            <Stack.Screen
+                name="Assessment"
+                component={AssessmentScreen}
+                options={{
+                    headerShown: true,
+                    title: 'Assessment',
+                }}
+            />
+        </Stack.Navigator>
     );
 }
