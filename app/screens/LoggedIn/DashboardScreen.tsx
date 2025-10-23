@@ -24,6 +24,8 @@ export default function DashboardScreen() {
     const { logout } = useAuth(); // ✅ use logout from context
     const [loading, setLoading] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
+    const { user } = useAuth();
+
 
     const handleLogOut = async () => {
         setLoading(true);
@@ -75,6 +77,11 @@ export default function DashboardScreen() {
                             Stay on top of your finances,
                             track assessments, and get insights.
                         </Text>
+
+                        <View style={styles.card}>
+                            <Text>Your plan: {user?.sub?.planName || 'No plan'}</Text>
+                        </View>
+
 
                         <DashboardButtons onCreated={() => setRefreshKey(prev => prev + 1)} />
 

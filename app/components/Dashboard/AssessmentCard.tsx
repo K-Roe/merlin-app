@@ -28,6 +28,7 @@ export default function AssessmentCard({ assessment, onDeleted }: Props) {
     };
 
     const handleDelete = async () => {
+        console.log(assessment.id)
         Alert.alert('Confirm', `Delete ${assessment.name}?`, [
             { text: 'Cancel', style: 'cancel' },
             {

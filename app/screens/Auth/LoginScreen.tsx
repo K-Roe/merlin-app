@@ -20,7 +20,7 @@ import { useAuth } from '../../context/AuthContext'; // ✅ import the Auth cont
 const { width } = Dimensions.get('window');
 
 export default function LoginScreen() {
-    const { setIsLoggedIn } = useAuth(); // ✅ use the context setter
+    const { setIsLoggedIn, setUser } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -42,13 +42,15 @@ export default function LoginScreen() {
 
             // Save token for later use
             await AsyncStorage.setItem('authToken', token);
+            await AsyncStorage.setItem('user', JSON.stringify(user));
             api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
             console.log('✅ Login response:', data);
+            console.log('✅ Login response:', user);
             Alert.alert('Welcome', `Logged in as ${user.name}`);
-
-            // ✅ Flip the auth state instead of navigating manually
+            setUser(user);
             setIsLoggedIn(true);
+
         } catch (err: any) {
             console.log('❌ Login error:', err.response?.status, err.response?.data || err.message);
             Alert.alert(
