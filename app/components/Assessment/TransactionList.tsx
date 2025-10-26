@@ -8,14 +8,13 @@ interface TransactionListProps {
 }
 
 export default function TransactionList({ entries, onDelete }: TransactionListProps) {
-    // 🧮 useMemo ensures we only recalc when entries change
     const { totalIncome, totalExpense, netTotal } = useMemo(() => {
         let income = 0;
         let expense = 0;
 
         for (const entry of entries) {
             if (entry.amount >= 0) income += entry.amount;
-            else expense += entry.amount; // already negative
+            else expense += entry.amount;
         }
 
         return {
@@ -35,18 +34,37 @@ export default function TransactionList({ entries, onDelete }: TransactionListPr
         <View style={styles.container}>
             <Text style={styles.heading}>Transactions</Text>
 
+            {/* Header */}
+            <View style={styles.tableHeader}>
+                <Text style={[styles.headerCell, { flex: 2 }]}>Description</Text>
+                <Text style={[styles.headerCell, { flex: 1, textAlign: 'right' }]}>Amount</Text>
+            </View>
+
             <FlatList
                 data={entries}
                 keyExtractor={(_, index) => index.toString()}
-                renderItem={({ item }) => (
-                    <TransactionEntry entry={item} onDelete={onDelete} />
-                )}
+                renderItem={({ item, index }) => {
+
+                    return (
+                        <View
+                            style={[
+                                styles.row,
+                                index % 2 === 0 ? styles.rowEven : styles.rowOdd,
+                            ]}
+                        >
+                            <TransactionEntry
+                                entry={item}
+                                onDelete={onDelete}
+                            />
+                        </View>
+                    );
+                }}
                 showsVerticalScrollIndicator={false}
                 scrollEnabled={false}
                 contentContainerStyle={{ paddingBottom: 10 }}
             />
 
-            {/* 💰 Summary Totals */}
+            {/* Summary */}
             <View style={styles.summary}>
                 <View style={styles.summaryRow}>
                     <Text style={styles.summaryLabel}>Total Income:</Text>
@@ -100,11 +118,30 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         textAlign: 'center',
     },
-    empty: {
-        textAlign: 'center',
-        color: 'rgba(0,0,0,0.5)',
-        fontStyle: 'italic',
-        marginTop: 20,
+    tableHeader: {
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderBottomColor: '#E0E0E0',
+        paddingBottom: 6,
+        marginBottom: 4,
+    },
+    headerCell: {
+        fontWeight: '700',
+        color: '#4B0082',
+        fontSize: 15,
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 8,
+        borderBottomWidth: 1,
+        borderBottomColor: '#F0F0F0',
+    },
+    rowEven: {
+        backgroundColor: '#FAFAFA',
+    },
+    rowOdd: {
+        backgroundColor: '#FFF',
     },
     summary: {
         borderTopWidth: 1,
@@ -127,15 +164,21 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
     income: {
-        color: '#16A34A', // green
+        color: '#16A34A',
     },
     expense: {
-        color: '#DC2626', // red
+        color: '#DC2626',
     },
     netRow: {
         marginTop: 8,
         borderTopWidth: 1,
         borderTopColor: '#E0E0E0',
         paddingTop: 8,
+    },
+    empty: {
+        textAlign: 'center',
+        color: 'rgba(0,0,0,0.5)',
+        fontStyle: 'italic',
+        marginTop: 20,
     },
 });

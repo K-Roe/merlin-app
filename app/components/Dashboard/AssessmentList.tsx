@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator, Alert, ScrollView, StyleSheet } from 'react-native';
+import {View, ActivityIndicator, Alert, ScrollView, StyleSheet, Text} from 'react-native';
 import api from '@/app/lib/axios';
 import AssessmentCard from '../Dashboard/AssessmentCard';
 
@@ -43,6 +43,9 @@ export default function AssessmentList({ refreshKey }: AssessmentListProps) {
 
     return (
         <View style={styles.outerCard}>
+            <Text style={styles.subtitle}>
+                📊 Your Assessments
+            </Text>
             <ScrollView
                 contentContainerStyle={styles.scroll}
                 showsVerticalScrollIndicator={false}
@@ -84,5 +87,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    subtitle: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#2865ec',
+        textAlign: 'center',
+        marginBottom: 24,
     },
 });

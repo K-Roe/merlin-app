@@ -7,8 +7,7 @@ import {
     Image,
     Dimensions,
     TouchableOpacity,
-    Alert,
-    Button
+    Alert
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import api from '@/app/lib/axios';
@@ -73,15 +72,20 @@ export default function DashboardScreen() {
                         />
 
                         <Text style={styles.title}>💼 Financial Dashboard</Text>
+
                         <Text style={styles.subtitle}>
-                            Stay on top of your finances,
-                            track assessments, and get insights.
+                            Stay on top of your finances, track assessments, and get insights.
                         </Text>
 
-                        <View style={styles.card}>
-                            <Text>Your plan: {user?.sub?.planName || 'No plan'}</Text>
+                        <View style={styles.infoCard}>
+                            <Text style={styles.infoGreeting}>Welcome back, <Text style={styles.userName}>{user?.name}</Text></Text>
+                            <Text style={styles.infoText}>Manage your financial assessments below 👇</Text>
                         </View>
 
+                        <View style={[styles.infoCard, styles.planCard]}>
+                            <Text style={styles.planLabel}>Current Plan</Text>
+                            <Text style={styles.planName}>{user?.sub?.planName || 'No plan active'}</Text>
+                        </View>
 
                         <DashboardButtons onCreated={() => setRefreshKey(prev => prev + 1)} />
 
@@ -141,25 +145,85 @@ const styles = StyleSheet.create({
         elevation: 8,
         alignItems: 'center',
     },
+
+    infoCard: {
+        backgroundColor: '#f9f8ff',
+        borderRadius: 18,
+        paddingVertical: 20,
+        paddingHorizontal: 24,
+        marginBottom: 18,
+        borderWidth: 1,
+        borderColor: 'rgba(75,0,130,0.1)',
+        shadowColor: '#4B0082',
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+        elevation: 3,
+        width: '100%',
+        alignItems: 'center',
+    },
     logo: {
         height: 100,
         width: width * 0.6,
         marginBottom: 30,
     },
     title: {
-        fontSize: 30,
+        fontSize: 34,
         fontWeight: '800',
-        color: '#4B0082',
+        color: '#3B0085',
         textAlign: 'center',
-        marginBottom: 6,
-        letterSpacing: 0.5,
+        marginBottom: 10,
+        letterSpacing: 0.6,
+        textShadowColor: 'rgba(75,0,130,0.25)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 4,
     },
+
     subtitle: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#2865ec',
+        fontSize: 17,
+        fontWeight: '500',
+        color: '#4B5563',
         textAlign: 'center',
-        marginBottom: 24,
+        marginBottom: 26,
+        lineHeight: 24,
+    },
+
+    infoGreeting: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#1f2937',
+        marginBottom: 6,
+    },
+
+    userName: {
+        color: '#4B0082',
+        fontWeight: '800',
+    },
+
+    infoText: {
+        fontSize: 15,
+        color: '#4B5563',
+        textAlign: 'center',
+    },
+
+    planCard: {
+        backgroundColor: 'linear-gradient(145deg, #ede9fe 0%, #d8b4fe 100%)',
+        borderColor: 'rgba(75,0,130,0.15)',
+        shadowOpacity: 0.15,
+    },
+
+    planLabel: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#4B0082',
+        letterSpacing: 1,
+        textTransform: 'uppercase',
+        marginBottom: 4,
+    },
+
+    planName: {
+        fontSize: 20,
+        fontWeight: '800',
+        color: '#16A34A',
     },
     saveButton: {
         backgroundColor: '#1f58ea',

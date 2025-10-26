@@ -30,10 +30,12 @@ export default function TransactionEntry({ entry, onDelete }: TransactionEntryPr
     const isIncome = entry.type === '+';
 
     return (
-        <View style={styles.item}>
-            {/* Left side — details */}
+        <View style={styles.row}>
+            {/* Description + category + date */}
             <View style={styles.left}>
-                <Text style={styles.name}>{entry.financial_assessment_name || entry.name}</Text>
+                <Text style={styles.name}>
+                    {entry.financial_assessment_name || entry.name}
+                </Text>
                 <Text style={styles.details}>
                     {formatDate(entry.date)} •{' '}
                     <Text style={styles.category}>
@@ -42,13 +44,21 @@ export default function TransactionEntry({ entry, onDelete }: TransactionEntryPr
                 </Text>
             </View>
 
-            {/* Right side — amount & delete */}
+            {/* Amount + delete */}
             <View style={styles.right}>
-                <Text style={[styles.amount, isIncome ? styles.income : styles.expense]}>
+                <Text
+                    style={[
+                        styles.amount,
+                        isIncome ? styles.income : styles.expense,
+                    ]}
+                >
                     {isIncome ? '+' : '-'}£{Math.abs(entry.amount).toFixed(2)}
                 </Text>
 
-                <TouchableOpacity onPress={() => onDelete(entry)} style={styles.deleteBtn}>
+                <TouchableOpacity
+                    onPress={() => onDelete(entry)}
+                    style={styles.deleteBtn}
+                >
                     <Text style={styles.deleteIcon}>🗑️</Text>
                 </TouchableOpacity>
             </View>
@@ -57,55 +67,56 @@ export default function TransactionEntry({ entry, onDelete }: TransactionEntryPr
 }
 
 const styles = StyleSheet.create({
-    item: {
-        backgroundColor: 'rgba(255,255,255,0.07)',
-        borderRadius: 12,
-        padding: 14,
-        marginBottom: 10,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
-    },
-    left: {
-        marginBottom: 6,
-    },
-    right: {
+    row: {
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 6,
+        paddingHorizontal: 4,
+    },
+    left: {
+        flex: 2,
+    },
+    right: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
         alignItems: 'center',
     },
     name: {
         fontWeight: '600',
-        color: '#070b07',
-        fontSize: 16,
+        color: '#111',
+        fontSize: 15,
     },
     details: {
-        color: 'rgb(7,11,7)',
-        fontSize: 13,
+        fontSize: 12,
+        color: '#555',
     },
     category: {
         fontStyle: 'italic',
-        color: 'rgb(7,11,7)',
+        color: '#4B0082',
         textTransform: 'capitalize',
     },
     amount: {
         fontWeight: '700',
-        fontSize: 16,
+        fontSize: 15,
+        textAlign: 'right',
+        minWidth: 80,
     },
     income: {
-        color: '#22c55e', // green
+        color: '#16A34A', // green
     },
     expense: {
-        color: '#ef4444', // red
+        color: '#DC2626', // red
     },
     deleteBtn: {
         padding: 6,
-        marginLeft: 8,
-        borderRadius: 20,
+        marginLeft: 6,
+        borderRadius: 8,
     },
     deleteIcon: {
-        fontSize: 18,
-        color: 'rgb(7,11,7)',
+        fontSize: 16,
+        color: '#4B0082',
     },
 });

@@ -45,8 +45,6 @@ export default function LoginScreen() {
             await AsyncStorage.setItem('user', JSON.stringify(user));
             api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
-            console.log('✅ Login response:', data);
-            console.log('✅ Login response:', user);
             Alert.alert('Welcome', `Logged in as ${user.name}`);
             setUser(user);
             setIsLoggedIn(true);

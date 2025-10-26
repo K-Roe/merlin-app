@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Checkbox } from 'expo-checkbox';
 import api from '@/app/lib/axios';
 import { useNavigation } from '@react-navigation/native';
+import AssessmentDetailsModal from "../Dashboard/AssessmentDetailsModal";
 
 interface Props {
     assessment: {
@@ -16,6 +17,9 @@ export default function AssessmentCard({ assessment, onDeleted }: Props) {
     const [selected, setSelected] = useState(false);
     const [loading, setLoading] = useState(false);
     const [advice, setAdvice] = useState<string | null>(null);
+    const [showModal, setShowModal] = useState(false);
+    const [details, setDetails] = useState<any | null>(null);
+
     const navigation = useNavigation();
 
 
@@ -23,12 +27,57 @@ export default function AssessmentCard({ assessment, onDeleted }: Props) {
         navigation.getParent()?.navigate('Assessment', { id: assessment.id, name: assessment.name });
     };
 
-    const handleDetails = () => {
-        Alert.alert('Details', `Showing details for ${assessment.name}`);
+    const handleDetails = async () => {
+        try {
+            setLoading(true);
+            // fetch raw entries
+            const res = await api.get(`/mobile/assessment/${assessment.id}/entries`);
+            const entries = res.data.map((e: any) => ({
+                ...e,
+                amount: parseFloat(e.amount),
+            }));
+
+            // group by category for income and expenses
+            const incomeTotals: Record<string, number> = {};
+            const expenseTotals: Record<string, number> = {};
+
+            entries.forEach((e: { categories: string; amount: number; }) => {
+                const cat = e.categories || "Uncategorized";
+                if (e.amount >= 0) {
+                    incomeTotals[cat] = (incomeTotals[cat] || 0) + e.amount;
+                } else {
+                    expenseTotals[cat] = (expenseTotals[cat] || 0) + Math.abs(e.amount);
+                }
+            });
+
+            // build arrays for chart data
+            const income = {
+                categories: Object.keys(incomeTotals),
+                values: Object.values(incomeTotals),
+            };
+
+            const expenses = {
+                categories: Object.keys(expenseTotals),
+                values: Object.values(expenseTotals),
+            };
+
+            // feed into modal
+            setDetails({
+                title: assessment.name,
+                income,
+                expenses,
+            });
+
+            setShowModal(true);
+        } catch (err: any) {
+            console.log("❌ Details fetch error:", err.response?.data || err.message);
+            Alert.alert("Error", "Could not load assessment details.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleDelete = async () => {
-        console.log(assessment.id)
         Alert.alert('Confirm', `Delete ${assessment.name}?`, [
             { text: 'Cancel', style: 'cancel' },
             {
@@ -112,6 +161,14 @@ export default function AssessmentCard({ assessment, onDeleted }: Props) {
                     <Text style={styles.adviceTitle}>AI Advice</Text>
                     <Text style={styles.adviceText}>{advice}</Text>
                 </View>
+            )}
+
+            {showModal && (
+                <AssessmentDetailsModal
+                    visible={showModal}
+                    details={details}
+                    onClose={() => setShowModal(false)}
+                />
             )}
         </View>
     );
